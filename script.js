@@ -1,6 +1,7 @@
 const categoryLabels = {
   tshirt: "T-shirt",
   shirt: "Shirt",
+  Jeans: "Jeans",
   pants: "Pants",
   sweatpants: "Sweatpants",
   jacket: "Jacket",
