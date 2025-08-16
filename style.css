@@ -1,212 +1,174 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
-  background: #f4f6f9;
+  padding: 0;
+  background: #f4f4f6;
   color: #333;
+  transition: background 0.3s, color 0.3s;
 }
 
+.dark-mode {
+  background: #181818;
+  color: #e0e0e0;
+}
+
+/* Headings */
 h1, h2 {
   text-align: center;
+  margin: 12px 0;
+  font-weight: 600;
   color: #2c3e50;
-  margin-top: 0;
 }
 
-h2 {
-  margin-bottom: 10px;
-}
+.center { text-align: center; margin: 12px; }
 
-/* Containers */
-.form-container, .search-container, #stats, #results {
-  background: white;
-  padding: 20px;
-  margin: 15px auto;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-  max-width: 500px;
-  width: 90%;
-  box-sizing: border-box;
-}
-
-input, select, button {
-  width: 100%;
-  padding: 12px;
-  margin: 6px 0;
-  font-size: 16px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-button {
-  background: #2c3e50;
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.2s, background 0.3s;
-}
-
-button:hover {
-  background: #1a252f;
-  transform: translateY(-2px);
-}
-
-/* Item Card */
-.item {
+/* Containers & Forms */
+.form-container {
+  max-width: 600px;
+  width: 95%;
+  margin: 14px auto;
   background: #fff;
-  padding: 14px;
-  margin: 8px 0;
-  border-radius: 12px;
-  border-left: 6px solid #2c3e50;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  transition: all 0.3s ease;
-  word-wrap: break-word;
-}
-
-.item div:first-child {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.color-box {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 1px solid #ccc;
-}
-
-.item img {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 12px;
-  transition: transform 0.2s;
-}
-
-.item img:hover {
-  transform: scale(1.1);
-}
-
-/* Buttons */
-.edit-btn, .delete-btn, .favorite-btn {
-  border: none;
-  border-radius: 8px;
-  padding: 6px 10px;
-  margin-left: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: 0.2s;
-}
-
-.edit-btn { background: #3498db; color: white; }
-.edit-btn:hover { background: #217dbb; }
-.delete-btn { background: #e74c3c; color: white; }
-.delete-btn:hover { background: #c0392b; }
-.favorite-btn { background: #f1c40f; color: #333; }
-.favorite-btn:hover { background: #d4ac0d; }
-
-/* Modal Styling */
-.modal {
-  display: none; 
-  position: fixed; 
-  z-index: 1000; 
-  left: 0; top: 0; 
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-}
-
-.modal-content {
-  background: white;
-  margin: 15% auto;
   padding: 20px;
-  border-radius: 12px;
-  max-width: 400px;
-  width: 90%;
-  box-sizing: border-box;
-  transition: all 0.3s ease;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: background 0.3s;
 }
 
-.modal input, .modal select {
+.dark-mode .form-container {
+  background: #242424;
+}
+
+/* Inputs, selects, buttons */
+input, select, button {
   width: 100%;
   padding: 10px;
   margin: 8px 0;
+  box-sizing: border-box;
+  font-size: 16px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  background: #fafafa;
+  transition: all 0.3s;
 }
 
-.modal-buttons {
+input:focus, select:focus {
+  border-color: #2980b9;
+  outline: none;
+  background: #fff;
+}
+
+button {
+  background: #2980b9;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+button:hover { background: #1f6391; transform: scale(1.02); }
+
+/* Clothes List */
+#clothesList { margin-top: 12px; }
+
+.item {
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 10px 0;
+  background: #fefefe;
+  transition: background 0.3s, transform 0.2s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
-/* Stats Panel */
-#stats p {
-  margin: 6px 0;
+.item:hover { transform: scale(1.02); }
+
+.dark-mode .item { background: #2c2c2c; border-color: #444; }
+
+.item img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin-top: 6px;
 }
 
-/* Grid View */
+/* Color box */
+.color-box {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #555;
+  margin-left: 6px;
+  vertical-align: middle;
+  border-radius: 4px;
+}
+
+/* Favorite button */
+button.favorite-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  transition: transform 0.2s, color 0.3s;
+}
+
+button.favorite-btn:hover { transform: scale(1.2); color: #f1c40f; }
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items:center;
+}
+
+.modal-content {
+  background:#fff;
+  padding: 24px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transition: background 0.3s;
+}
+
+.dark-mode .modal-content { background: #2b2b2b; }
+
+.modal-buttons button {
+  width: 48%;
+  margin-right: 4%;
+}
+
+.modal-buttons button:last-child { margin-right: 0; }
+
+/* Grid view */
 .grid-view #clothesList {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
 }
 
-.grid-view .item {
-  border-left: none;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
+/* Category headings professional */
+.item h3 {
+  background: #ecf0f1;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: #2c3e50;
+  margin: 6px 0;
+  font-weight: 500;
 }
 
-/* Dark Mode */
-body.dark-mode {
-  background: #121212;
-  color: #eee;
-}
+.dark-mode .item h3 { background: #3a3a3a; color: #e0e0e0; }
 
-body.dark-mode .form-container,
-body.dark-mode .search-container,
-body.dark-mode #stats,
-body.dark-mode #results {
-  background: #1e1e1e;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-  color: #eee;
-}
-
-body.dark-mode input,
-body.dark-mode select,
-body.dark-mode button {
-  background: #2a2a2a;
-  color: #eee;
-  border: 1px solid #555;
-}
-
-body.dark-mode .item {
-  background: #2a2a2a;
-  border-left: 6px solid #f1c40f;
-}
-
-body.dark-mode .modal-content {
-  background: #2a2a2a;
-  color: #eee;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .item img { width: 50px; height: 50px; }
-  .color-box { width: 18px; height: 18px; }
-  button, input, select { font-size: 14px; padding: 10px; }
-}
-
-@media (max-width: 480px) {
-  .item { flex-direction: column; align-items: flex-start; }
-  .item div:last-child { margin-top: 8px; }
+/* Responsive adjustments */
+@media (max-width: 600px){
+  input, select, button { font-size: 14px; padding: 8px; }
+  .modal-content { width: 95%; }
   .grid-view #clothesList { grid-template-columns: 1fr; }
-  .modal-content { margin: 30% auto; padding: 15px; }
 }

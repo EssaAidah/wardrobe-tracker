@@ -157,4 +157,4 @@ window.addEventListener("resize", ()=>{
 
 function toggleDarkMode(){ document.body.classList.toggle("dark-mode"); }
 
-window.onload=()=>{ displayClothes(wardrobe);
+window.onload=()=>{ displayClothes(wardrobe); updateStats(); };
