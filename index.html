@@ -8,28 +8,29 @@
 <body>
   <h1>👕 My Wardrobe Tracker</h1>
 
+  <!-- Dark Mode Toggle -->
   <div style="text-align:center; margin:10px;">
-    <button onclick="toggleDarkMode()">🌙  Dark Mode</button>
+    <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
   </div>
 
+  <!-- Add Clothes Form -->
   <div class="form-container">
     <h2>Add Clothing Item</h2>
     <input type="text" id="itemName" placeholder="Item Name">
     <select id="itemType">
-      <option value="tshirt">T-Shirt</option>
+      <option value="tshirt">T-shirt</option>
       <option value="shirt">Shirt</option>
       <option value="pants">Pants</option>
+      <option value="sweatpants">Sweatpants</option>
       <option value="jacket">Jacket</option>
+      <option value="shorts">Shorts</option>
+      <option value="hoodies">Hoodies</option>
+      <option value="vests">Vests</option>
+      <option value="hats">Hats</option>
       <option value="shoes">Shoes</option>
-      <option value="Sandal">Sandal</option> 
-      <option value="Accesories">Accesories</option>
-      <option value="Hat">Hat</option>
-      <option value="Shorts">Shorts</option>
-      <option value="Hoodie">Hoodie</option>
-      <option value="Sweatpants">Sweatpants</option>
-      <option value="Vest">Vest</option>
+      <option value="sandals">Sandals</option>
+      <option value="accessories">Accessories</option>
       <option value="other">Other</option>
-
     </select>
     <input type="color" id="itemColorHex">
     <input type="text" id="itemColorName" placeholder="Color name (e.g. red)">
@@ -37,23 +38,24 @@
     <button onclick="addItem()">Add Item</button>
   </div>
 
+  <!-- Search and Filter -->
   <div class="search-container">
     <h2>Search & Filter</h2>
     <input type="text" id="searchColor" placeholder="Enter color name...">
     <select id="filterType" onchange="applyFilters()">
       <option value="all">All Types</option>
-      <option value="tshirt">T-Shirt</option>
+      <option value="tshirt">T-shirt</option>
       <option value="shirt">Shirt</option>
       <option value="pants">Pants</option>
+      <option value="sweatpants">Sweatpants</option>
       <option value="jacket">Jacket</option>
+      <option value="shorts">Shorts</option>
+      <option value="hoodies">Hoodies</option>
+      <option value="vests">Vests</option>
+      <option value="hats">Hats</option>
       <option value="shoes">Shoes</option>
-      <option value="Sandal">Sandal</option>
-      <option value="Accesories">Accesories</option>
-      <option value="Hat">Hat</option>
-      <option value="Shorts">Shorts</option>
-      <option value="Hoodie">Hoodie</option>
-      <option value="Sweatpants">Sweatpants</option>
-      <option value="Vest">Vest</option>
+      <option value="sandals">Sandals</option>
+      <option value="accessories">Accessories</option>
       <option value="other">Other</option>
     </select>
     <button onclick="searchByColor()">Search</button>
@@ -61,10 +63,12 @@
     <button onclick="showFavorites()">⭐ Show Favorites</button>
   </div>
 
+  <!-- View Toggle -->
   <div style="text-align:center; margin:10px 0;">
     <button onclick="toggleView()">Switch to Grid View</button>
   </div>
 
+  <!-- Statistics -->
   <div id="stats">
     <h2>Statistics</h2>
     <p id="totalItems">Total Items: 0</p>
@@ -72,29 +76,31 @@
     <p id="mostCommonColor">Most Common Color: </p>
   </div>
 
+  <!-- Display Results -->
   <div id="results">
     <h2>All Clothes</h2>
     <div id="clothesList"></div>
   </div>
 
+  <!-- Edit Modal -->
   <div id="editModal" class="modal">
     <div class="modal-content">
       <h2>Edit Item</h2>
       <input type="text" id="editName" placeholder="Item Name">
       <select id="editType">
-        <option value="tshirt">T-Shirt</option>
+        <option value="tshirt">T-shirt</option>
         <option value="shirt">Shirt</option>
         <option value="pants">Pants</option>
+        <option value="sweatpants">Sweatpants</option>
         <option value="jacket">Jacket</option>
+        <option value="shorts">Shorts</option>
+        <option value="hoodies">Hoodies</option>
+        <option value="vests">Vests</option>
+        <option value="hats">Hats</option>
         <option value="shoes">Shoes</option>
-        <option value="Accesories">Accesories</option>
-         <option value="Sandal">Sandal</option>
-         <option value="Hat">Hat</option>
-         <option value="Shorts">Shorts</option>
-         <option value="Hoodie">Hoodie</option>
-         <option value="Sweatpants">Sweatpants</option>
-         <option value="Vest">Vest</option>
-         <option value="other">Other</option>
+        <option value="sandals">Sandals</option>
+        <option value="accessories">Accessories</option>
+        <option value="other">Other</option>
       </select>
       <input type="color" id="editColorHex">
       <input type="text" id="editColorName" placeholder="Color name (e.g. red)">

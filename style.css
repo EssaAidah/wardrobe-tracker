@@ -15,6 +15,7 @@ h2 {
   margin-bottom: 10px;
 }
 
+/* Containers */
 .form-container, .search-container, #stats, #results {
   background: white;
   padding: 20px;
@@ -22,6 +23,8 @@ h2 {
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.1);
   max-width: 500px;
+  width: 90%;
+  box-sizing: border-box;
 }
 
 input, select, button {
@@ -47,6 +50,7 @@ button:hover {
   transform: translateY(-2px);
 }
 
+/* Item Card */
 .item {
   background: #fff;
   padding: 14px;
@@ -57,7 +61,8 @@ button:hover {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
+  word-wrap: break-word;
 }
 
 .item div:first-child {
@@ -86,6 +91,7 @@ button:hover {
   transform: scale(1.1);
 }
 
+/* Buttons */
 .edit-btn, .delete-btn, .favorite-btn {
   border: none;
   border-radius: 8px;
@@ -103,6 +109,7 @@ button:hover {
 .favorite-btn { background: #f1c40f; color: #333; }
 .favorite-btn:hover { background: #d4ac0d; }
 
+/* Modal Styling */
 .modal {
   display: none; 
   position: fixed; 
@@ -118,7 +125,9 @@ button:hover {
   padding: 20px;
   border-radius: 12px;
   max-width: 400px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  width: 90%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
 }
 
 .modal input, .modal select {
@@ -135,10 +144,12 @@ button:hover {
   gap: 10px;
 }
 
+/* Stats Panel */
 #stats p {
   margin: 6px 0;
 }
 
+/* Grid View */
 .grid-view #clothesList {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -150,8 +161,10 @@ button:hover {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  justify-content: center;
 }
 
+/* Dark Mode */
 body.dark-mode {
   background: #121212;
   color: #eee;
@@ -184,16 +197,16 @@ body.dark-mode .modal-content {
   color: #eee;
 }
 
-@media (max-width: 600px) {
-  .item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .item div:last-child {
-    margin-top: 10px;
-  }
-  input, select, button {
-    font-size: 15px;
-    padding: 10px;
-  }
-} 
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .item img { width: 50px; height: 50px; }
+  .color-box { width: 18px; height: 18px; }
+  button, input, select { font-size: 14px; padding: 10px; }
+}
+
+@media (max-width: 480px) {
+  .item { flex-direction: column; align-items: flex-start; }
+  .item div:last-child { margin-top: 8px; }
+  .grid-view #clothesList { grid-template-columns: 1fr; }
+  .modal-content { margin: 30% auto; padding: 15px; }
+}
