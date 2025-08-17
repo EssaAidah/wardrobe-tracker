@@ -1,161 +1,186 @@
-const categoryLabels = {
-  tshirt: "T-shirt",
-  shirt: "Shirt",
-  Jeans: "Jeans",
-  pants: "Pants",
-  sweatpants: "Sweatpants",
-  jacket: "Jacket",
-  shorts: "Shorts",
-  hoodies: "Hoodies",
-  vests: "Vests",
-  hats: "Hats",
-  shoes: "Shoes",
-  sandals: "Sandals",
-  accessories: "Accessories",
-  other: "Other"
-};
-
 let wardrobe = JSON.parse(localStorage.getItem("wardrobe")) || [];
 let editingIndex = null;
-let isGridView = false;
 
-function saveWardrobe() { localStorage.setItem("wardrobe", JSON.stringify(wardrobe)); updateStats(); }
+function saveWardrobe() {
+  localStorage.setItem("wardrobe", JSON.stringify(wardrobe));
+}
 
-function addItem() {
+function displayClothes(list) {
+  const container = document.getElementById("clothesList");
+  container.innerHTML = "";
+  list.forEach((item, index) => {
+    let div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <h3>${item.name}</h3>
+      <p>Category: ${item.type}</p>
+      <p>Color: ${item.colorName} <span class="color-box" style="background:${item.colorHex}"></span></p>
+      ${item.imgData ? `<img src="${item.imgData}" alt="${item.name}">` : ""}
+      <button onclick="openEdit(${index})">✏️ Edit</button>
+      <button onclick="deleteItem(${index})">🗑️ Delete</button>
+      <button class="favorite-btn" onclick="toggleFavorite(${index})">${item.favorite ? "⭐" : "☆"}</button>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function addClothing() {
   let name = document.getElementById("itemName").value.trim();
   let type = document.getElementById("itemType").value;
-  let colorHex = document.getElementById("itemColorHex").value.trim();
+  let hex = document.getElementById("itemColorHex").value.trim();
   let colorName = document.getElementById("itemColorName").value.trim().toLowerCase();
-  let imageFile = document.getElementById("itemImage").files[0];
-  if(!name||!colorName){alert("Enter both name and color name!"); return;}
+  let file = document.getElementById("itemImage").files[0];
+  let url = document.getElementById("itemImageUrl").value.trim();
+  let preview = document.getElementById("itemPreview");
 
-  if(imageFile){
+  if (!name || !colorName) {
+    alert("Please enter name and color!");
+    return;
+  }
+
+  function addItem(imgData) {
+    wardrobe.push({ name, type, colorHex: hex, colorName, imgData, favorite: false });
+    saveWardrobe();
+    displayClothes(wardrobe);
+    document.getElementById("itemName").value = "";
+    document.getElementById("itemColorName").value = "";
+    document.getElementById("itemImage").value = "";
+    document.getElementById("itemImageUrl").value = "";
+    if (preview) preview.src = "";
+  }
+
+  if (file) {
     let reader = new FileReader();
-    reader.onload = e => saveItem({name,type,colorHex,colorName,imgData:e.target.result});
-    reader.readAsDataURL(imageFile);
-  } else saveItem({name,type,colorHex,colorName,imgData:null});
-}
-
-function saveItem(item){ item.favorite=false; wardrobe.push(item); saveWardrobe(); displayClothes(wardrobe); clearInputs(); }
-
-function displayClothes(items){
-  let list=document.getElementById("clothesList");
-  list.innerHTML="";
-  let categories={};
-  items.forEach((item,index)=>{ if(!categories[item.type]) categories[item.type]=[]; categories[item.type].push({...item,index}); });
-
-  for(let type in categories){
-    let categoryDiv=document.createElement("div");
-    categoryDiv.innerHTML=`<h3>${categoryLabels[type]||type}</h3>`;
-    categories[type].forEach(item=>{
-      let div=document.createElement("div");
-      div.className="item";
-      div.innerHTML=`
-        <div>${item.name} (${item.colorName}) 
-          <span class="color-box" style="background:${item.colorHex};"></span>
-          ${item.imgData?`<img src="${item.imgData}" alt="${item.name}">`:''}
-        </div>
-        <div>
-          <button class="favorite-btn" onclick="toggleFavorite(${item.index})">${item.favorite?"⭐":"☆"}</button>
-          <button class="edit-btn" onclick="openEdit(${item.index})">✏️</button>
-          <button class="delete-btn" onclick="deleteItem(${item.index})">❌</button>
-        </div>
-      `;
-      categoryDiv.appendChild(div);
-    });
-    list.appendChild(categoryDiv);
+    reader.onload = e => {
+      if (preview) preview.src = e.target.result;
+      addItem(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  } else if (url) {
+    let img = new Image();
+    img.onload = () => {
+      if (preview) preview.src = url;
+      addItem(url);
+    };
+    img.onerror = () => alert("Invalid image URL. Please check the link.");
+    img.src = url;
+  } else {
+    addItem("");
   }
 }
 
-function deleteItem(index){ wardrobe.splice(index,1); saveWardrobe(); displayClothes(wardrobe); }
-function toggleFavorite(index){ wardrobe[index].favorite=!wardrobe[index].favorite; saveWardrobe(); displayClothes(wardrobe); }
+function openEdit(index) {
+  editingIndex = index;
+  let item = wardrobe[index];
+  document.getElementById("editName").value = item.name;
+  document.getElementById("editType").value = item.type;
+  document.getElementById("editColorHex").value = item.colorHex;
+  document.getElementById("editColorName").value = item.colorName;
+  document.getElementById("editImage").value = "";
+  document.getElementById("editImageUrl").value = "";
 
-function openEdit(index){
-  editingIndex=index;
-  let item=wardrobe[index];
-  document.getElementById("editName").value=item.name;
-  document.getElementById("editType").value=item.type;
-  document.getElementById("editColorHex").value=item.colorHex;
-  document.getElementById("editColorName").value=item.colorName;
-  document.getElementById("editImage").value="";
-  document.getElementById("editModal").style.display="block";
+  let preview = document.getElementById("editPreview");
+  if(preview) preview.src = item.imgData || "";
+
+  document.getElementById("editModal").style.display = "flex";
 }
 
-function saveEdit(){
-  let newName=document.getElementById("editName").value.trim();
-  let newType=document.getElementById("editType").value;
-  let newHex=document.getElementById("editColorHex").value.trim();
-  let newColorName=document.getElementById("editColorName").value.trim().toLowerCase();
-  let imageFile=document.getElementById("editImage").files[0];
-  if(!newName||!newColorName){alert("Enter both name and color name!"); return;}
+function saveEdit() {
+  let newName = document.getElementById("editName").value.trim();
+  let newType = document.getElementById("editType").value;
+  let newHex = document.getElementById("editColorHex").value.trim();
+  let newColorName = document.getElementById("editColorName").value.trim().toLowerCase();
+  let imageFile = document.getElementById("editImage").files[0];
+  let imageUrl = document.getElementById("editImageUrl").value.trim();
+  let preview = document.getElementById("editPreview");
 
-  function updateItem(imgData=null){
-    let item=wardrobe[editingIndex];
-    item.name=newName;
-    item.type=newType;
-    item.colorHex=newHex;
-    item.colorName=newColorName;
-    if(imgData!==null) item.imgData=imgData;
-    saveWardrobe(); displayClothes(wardrobe); closeModal();
+  if (!newName || !newColorName) {
+    alert("Enter both name and color name!");
+    return;
   }
 
-  if(imageFile){
-    let reader=new FileReader();
-    reader.onload=e=>updateItem(e.target.result);
+  function updateItem(imgData = undefined) {
+    let item = wardrobe[editingIndex];
+    item.name = newName;
+    item.type = newType;
+    item.colorHex = newHex;
+    item.colorName = newColorName;
+    if (imgData !== undefined && imgData !== null && imgData !== "") {
+      item.imgData = imgData;
+    }
+    saveWardrobe();
+    displayClothes(wardrobe);
+    if(preview) preview.src = "";
+    closeModal();
+  }
+
+  if (imageFile) {
+    let reader = new FileReader();
+    reader.onload = e => {
+      if(preview) preview.src = e.target.result;
+      updateItem(e.target.result);
+    };
     reader.readAsDataURL(imageFile);
-  } else updateItem();
+  } else if (imageUrl) {
+    let img = new Image();
+    img.onload = () => {
+      if(preview) preview.src = imageUrl;
+      updateItem(imageUrl);
+    };
+    img.onerror = () => alert("Invalid image URL. Please check the link.");
+    img.src = imageUrl;
+  } else {
+    updateItem(); // keep old image if nothing new
+  }
 }
 
-function closeModal(){ document.getElementById("editModal").style.display="none"; editingIndex=null; }
-
-function searchByColor(){
-  let color=document.getElementById("searchColor").value.trim().toLowerCase();
-  let filtered=wardrobe.filter(item=>item.colorName.includes(color));
-  applyFilters(filtered);
+function deleteItem(index) {
+  if (confirm("Delete this item?")) {
+    wardrobe.splice(index, 1);
+    saveWardrobe();
+    displayClothes(wardrobe);
+  }
 }
 
-function showAll(){ document.getElementById("searchColor").value=""; applyFilters(); }
-function showFavorites(){ applyFilters(wardrobe.filter(item=>item.favorite)); }
-
-function applyFilters(filteredItems=null){
-  let type=document.getElementById("filterType").value;
-  let items=filteredItems||wardrobe;
-  if(type!=="all") items=items.filter(item=>item.type===type);
-  displayClothes(items);
+function toggleFavorite(index) {
+  wardrobe[index].favorite = !wardrobe[index].favorite;
+  saveWardrobe();
+  displayClothes(wardrobe);
 }
 
-function clearInputs(){
-  document.getElementById("itemName").value="";
-  document.getElementById("itemColorHex").value="#000000";
-  document.getElementById("itemColorName").value="";
-  document.getElementById("itemImage").value="";
+function showFavorites() {
+  let favs = wardrobe.filter(item => item.favorite);
+  displayClothes(favs);
 }
 
-function updateStats(){
-  document.getElementById("totalItems").innerText=`Total Items: ${wardrobe.length}`;
-  let typesCount={};
-  wardrobe.forEach(item=>typesCount[item.type]=(typesCount[item.type]||0)+1);
-  document.getElementById("itemsByType").innerText=
-    `Items by Type: ${Object.keys(typesCount).map(t=>`${categoryLabels[t]||t}:${typesCount[t]}`).join(", ")}`;
-  let colorCount={};
-  wardrobe.forEach(item=>colorCount[item.colorName]=(colorCount[item.colorName]||0)+1);
-  let mostCommon=Object.keys(colorCount).reduce((a,b)=>colorCount[a]>colorCount[b]?a:b,"N/A");
-  document.getElementById("mostCommonColor").innerText=`Most Common Color: ${mostCommon}`;
+function toggleDarkMode() {
+  document.body.classList.toggle("dark-mode");
 }
 
-function toggleView(){
-  const results=document.getElementById("results");
-  isGridView=!isGridView;
-  const button=event.currentTarget;
-  if(isGridView){ results.classList.add("grid-view"); button.innerText="Switch to List View"; }
-  else { results.classList.remove("grid-view"); button.innerText="Switch to Grid View"; }
+function toggleView() {
+  document.body.classList.toggle("grid-view");
 }
 
-window.addEventListener("resize", ()=>{
-  if(isGridView) document.getElementById("results").classList.add("grid-view");
-  else document.getElementById("results").classList.remove("grid-view");
-});
+function toggleSection(id) {
+  let sec = document.getElementById(id);
+  sec.style.display = sec.style.display === "block" ? "none" : "block";
+}
 
-function toggleDarkMode(){ document.body.classList.toggle("dark-mode"); }
+function applySearch() {
+  let name = document.getElementById("searchInput").value.toLowerCase();
+  let type = document.getElementById("searchType").value;
+  let color = document.getElementById("searchColor").value.toLowerCase();
 
-window.onload=()=>{ displayClothes(wardrobe); updateStats(); };
+  let filtered = wardrobe.filter(item =>
+    (name === "" || item.name.toLowerCase().includes(name)) &&
+    (type === "" || item.type === type) &&
+    (color === "" || item.colorName.includes(color))
+  );
+  displayClothes(filtered);
+}
+
+function closeModal() {
+  document.getElementById("editModal").style.display = "none";
+}
+
+displayClothes(wardrobe);
